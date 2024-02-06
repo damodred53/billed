@@ -85,10 +85,11 @@ export default class {
     if (typeof $('#modaleFileAdmin1').modal === 'function') $('#modaleFileAdmin1').modal('show')
   }
 
-  handleEditTicket(e, bill, bills) {
+  /*handleEditTicket(e, bill, bills) {
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id
     if (this.counter % 2 === 0) {
+
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
       })
@@ -108,6 +109,18 @@ export default class {
     $('#icon-eye-d').click(this.handleClickIconEye)
     $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
     $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))
+  }*/
+
+  handleEditTicket(e, bill, bills) {
+    console.log(bill.id)
+    if (this.id === undefined || this.id !== bill.id) this.id = bill.id
+    console.log(bill.id)
+    bills.forEach(b => {
+      $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
+    })
+    $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
+    $('.dashboard-right-container div').html(DashboardFormUI(bill))
+    $('.vertical-navbar').css({ height: '150vh' })
   }
 
   handleAcceptSubmit = (e, bill) => {
@@ -144,12 +157,14 @@ export default class {
         .html("")
       this.counter ++
     }
-console.log('prout')
+console.log('test')
     bills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
     return bills
+
+    
 
   }
 
