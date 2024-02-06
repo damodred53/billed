@@ -113,3 +113,9 @@ tr td:nth-of-type(5) {
 .bill-proof-container {
   overflow: scroll;
 }
+
+/* Ajout de Florent Guyard */
+
+.modal-body {
+  overflow-x: scroll;
+}
