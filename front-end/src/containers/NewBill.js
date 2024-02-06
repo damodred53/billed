@@ -24,11 +24,24 @@ export default class NewBill {
     console.log(filePath)
     const fileName = filePath[filePath.length-1]
     console.log(fileName)
+
+    const splitedfileName = fileName.split('.');
+    const fileExtension = splitedfileName[splitedfileName.length-1];
+    console.log(fileExtension)
+    const isGoodFormat = (fileExtension) => ['jpeg', 'jpg', 'png'].includes(fileExtension);
+    console.log(isGoodFormat(fileExtension))
+    if (!isGoodFormat(fileExtension)) {
+      alert('le format du document doit impérativement être jpg, jpeg ou png')
+      return
+    } else {
+      alert( 'c est ben le mauvais format')
+    }
+
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-
+    console.log(formData)
     this.store
       .bills()
       .create({
@@ -61,8 +74,8 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
-    console.log(fileUrl)
-    console.log(fileName)
+
+
     this.updateBill(bill)
     this.onNavigate(ROUTES_PATH['Bills'])
   }
