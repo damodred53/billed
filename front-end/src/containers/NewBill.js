@@ -18,6 +18,7 @@ export default class NewBill {
   handleChangeFile = e => {
     console.log(e.target.value)
     e.preventDefault()
+    const fileMain = this.document.querySelector(`input[data-testid="file"]`)
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     console.log(file)
     const filePath = e.target.value.split(/\\/g)
@@ -32,9 +33,10 @@ export default class NewBill {
     console.log(isGoodFormat(fileExtension))
     if (!isGoodFormat(fileExtension)) {
       alert('le format du document doit impérativement être jpg, jpeg ou png')
+      fileMain.value = null
       return
     } else {
-      alert( 'c est ben le mauvais format')
+      alert( 'c est ben le bon format')
     }
 
     const formData = new FormData()
