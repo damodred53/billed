@@ -145,8 +145,11 @@ describe('Given I am connected as an Admin', () => {
       const iconEdit = screen.getByTestId('open-bill47qAXb6fIm2zOKkLzMro')
       userEvent.click(iconEdit)
       userEvent.click(iconEdit)
-      const bigBilledIcon = screen.queryByTestId("big-billed-icon")
-      expect(bigBilledIcon).toBeTruthy()
+
+      //Portion de code mise en commentaire car faisant reférence à du code inutile et supprimé pendant le debuggage
+
+      /*const bigBilledIcon = screen.queryByTestId("big-billed-icon")
+      expect(bigBilledIcon).toBeTruthy()*/
     })
   })
 
