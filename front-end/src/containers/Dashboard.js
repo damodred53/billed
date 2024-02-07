@@ -27,6 +27,7 @@ export const filteredBills = (data, status) => {
     }) : []
 }
 
+// création de la carte des factures des employés côté admin elles peuvent être en attente, validé ou refusé
 export const card = (bill) => {
   const firstAndLastNames = bill.email.split('@')[0]
   const firstName = firstAndLastNames.includes('.') ?
@@ -56,6 +57,7 @@ export const cards = (bills) => {
   return bills && bills.length ? bills.map(bill => card(bill)).join("") : ""
 }
 
+// attribution d'un status à chaque card représentant une facture d'un employé
 export const getStatus = (index) => {
   switch (index) {
     case 1:
@@ -67,6 +69,7 @@ export const getStatus = (index) => {
   }
 }
 
+// gestion des flèches et des menus déroulants côté admin
 export default class {
   constructor({ document, onNavigate, store, bills, localStorage }) {
     this.document = document
@@ -78,6 +81,7 @@ export default class {
     new Logout({ localStorage, onNavigate })
   }
 
+  // gestion de l'apparition de la modale et du justificatif à l'intérieur
   handleClickIconEye = () => {
     const billUrl = $('#icon-eye-d').attr("data-bill-url")
     const imgWidth = Math.floor($('#modaleFileAdmin1').width() * 0.8)
@@ -85,37 +89,12 @@ export default class {
     if (typeof $('#modaleFileAdmin1').modal === 'function') $('#modaleFileAdmin1').modal('show')
   }
 
-  /*handleEditTicket(e, bill, bills) {
-    if (this.counter === undefined || this.id !== bill.id) this.counter = 0
-    if (this.id === undefined || this.id !== bill.id) this.id = bill.id
-    if (this.counter % 2 === 0) {
-
-      bills.forEach(b => {
-        $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
-      })
-      $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
-      $('.dashboard-right-container div').html(DashboardFormUI(bill))
-      $('.vertical-navbar').css({ height: '150vh' })
-      this.counter ++
-    } else {
-      $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
-
-      $('.dashboard-right-container div').html(`
-        <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
-      `)
-      $('.vertical-navbar').css({ height: '120vh' })
-      this.counter ++
-    }
-    $('#icon-eye-d').click(this.handleClickIconEye)
-    $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
-    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))
-  }*/
-
+  // gestion de l'intégration de chaque facture dans le bloc de droite permettant sa validation ou son refus
   handleEditTicket(e, bill, bills) {
-    console.log(bill.id)
+
     if (this.id === undefined || this.id !== bill.id) {
       this.id = bill.id
-    console.log(bill.id)
+
     bills.forEach(b => {
       $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
     })
@@ -130,6 +109,7 @@ export default class {
     
   }
 
+  // gestion de l'acceptation d'une facture
   handleAcceptSubmit = (e, bill) => {
     const newBill = {
       ...bill,
@@ -140,6 +120,7 @@ export default class {
     this.onNavigate(ROUTES_PATH['Dashboard'])
   }
 
+    // gestion du refus d'une facture
   handleRefuseSubmit = (e, bill) => {
     const newBill = {
       ...bill,
@@ -164,7 +145,7 @@ export default class {
         .html("")
       this.counter ++
     }
-console.log('test')
+
     bills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })

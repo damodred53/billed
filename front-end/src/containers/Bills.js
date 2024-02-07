@@ -16,6 +16,7 @@ export default class {
     new Logout({ document, localStorage, onNavigate })
   }
 
+  // permet d'aficher la page de création d'une nouvelle facture
   handleClickNewBill = () => {
     this.onNavigate(ROUTES_PATH['NewBill'])
   }
