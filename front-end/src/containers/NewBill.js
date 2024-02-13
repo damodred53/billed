@@ -16,7 +16,6 @@ export default class NewBill {
     new Logout({ document, localStorage, onNavigate })
   }
   handleChangeFile = e => {
-    console.log(e.target.value)
     e.preventDefault()
     const fileMain = this.document.querySelector(`input[data-testid="file"]`)
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
@@ -30,13 +29,14 @@ export default class NewBill {
     const fileExtension = splitedfileName[splitedfileName.length-1];
     console.log(fileExtension)
     const isGoodFormat = (fileExtension) => ['jpeg', 'jpg', 'png'].includes(fileExtension);
-    console.log(isGoodFormat(fileExtension))
+    const errorMessage = this.document.querySelector('.error_format_paragraph');
+
     if (!isGoodFormat(fileExtension)) {
-      alert('le format du document doit impérativement être jpg, jpeg ou png')
+      errorMessage.style.display = "block";
       fileMain.value = null
       return
     } else {
-      alert( 'c est ben le bon format')
+      errorMessage.style.display = "none"
     }
 
     const formData = new FormData()
@@ -61,7 +61,7 @@ export default class NewBill {
   }
   handleSubmit = e => {
     e.preventDefault()
-    console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
+    
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
