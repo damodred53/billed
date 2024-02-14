@@ -45,13 +45,8 @@ describe("Given I am connected as an employee", () => {
         test("Then the input file should display the file name", async () => {
 
             
-
-            //création d'un page fictive newbill
-            const html = NewBillUI();
-            document.body.innerHTML = html;
-
-            const pathname = ROUTES_PATH['NewBill']
-            root.innerHTML = ROUTES({ pathname: pathname, loading: true })
+            
+            
 
             const onNavigate = (pathname) => {
                 document.body.innerHTML = ROUTES({ pathname : pathname });

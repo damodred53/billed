@@ -1,5 +1,6 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 import Logout from "./Logout.js"
+/*import {formatChecker} from '../constants/formatChecker.js'*/
 
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
@@ -30,14 +31,15 @@ export default class NewBill {
     console.log(fileExtension)
     const isGoodFormat = (fileExtension) => ['jpeg', 'jpg', 'png'].includes(fileExtension);
     const errorMessage = this.document.querySelector('.error_format_paragraph');
+    
+    /*formatChecker(fileExtension);*/
+    errorMessage.style.display = "none"
 
     if (!isGoodFormat(fileExtension)) {
       errorMessage.style.display = "block";
       fileMain.value = null
-      return
-    } else {
-      errorMessage.style.display = "none"
-    }
+      
+    } 
 
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
