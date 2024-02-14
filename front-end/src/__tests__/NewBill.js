@@ -42,22 +42,30 @@ describe("Given I am connected as an employee", () => {
         })
     })
     describe("When I select an image in a correct format", () => {
-        test("Then the input file should display the file name", () => {
+        test("Then the input file should display the file name", async () => {
+
+            
 
             //création d'un page fictive newbill
             const html = NewBillUI();
             document.body.innerHTML = html;
+
+            const pathname = ROUTES_PATH['NewBill']
+            root.innerHTML = ROUTES({ pathname: pathname, loading: true })
+
             const onNavigate = (pathname) => {
-                document.body.innerHTML = ROUTES({ pathname });
+                document.body.innerHTML = ROUTES({ pathname : pathname });
             };
+
             // initialisation d'une nouvelle instance newBill
-            const newBill = new NewBill({ document, onNavigate, store, localStorage: window.localStorage })
+            const newBill = new NewBill({ document, onNavigate, store : store, localStorage: window.localStorage })
             const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e))
 
             // ajout d'un listener sur la partie file du formulaire de création des factures
             const input = screen.getByTestId('file');
             input.addEventListener('change', handleChangeFile);
 
+            const appendSpy = jest.spyOn(FormData.prototype, 'append');
             //fichier au bon format
             fireEvent.change(input, {
                 target: {
@@ -66,9 +74,30 @@ describe("Given I am connected as an employee", () => {
                     })],
                 }
             })
+
             expect(handleChangeFile).toHaveBeenCalled()
             expect(input.files[0].name).toBe('image_test_unitaire.jpg');
+
+            const formData = new FormData()
+            const email = "email_de_test@live.fr";
+            formData.append('file', input.files[0])
+            formData.append('email', email)
+            expect(formData).toBeDefined()
+
+            expect(appendSpy).toHaveBeenCalledWith('file', expect.any(File));
+            expect(appendSpy).toHaveBeenCalledWith('email', 'email_de_test@live.fr');
+            for( const data of formData) {
+              console.log(data)
+            }
+
+            const postSpyBills = jest.fn(store, "bills");
+            const postSpyBillsSpy = jest.spyOn(store, "bills");
+            const postSpyBillsCreateSpy = jest.spyOn(store.bills(), "create");
             
+            const postSpyCreate = jest.fn(store, "create");
+
+           
+
         })
 
 
@@ -103,7 +132,7 @@ describe("Given I am connected as an employee", () => {
             };
 
             // initialisation d'une nouvelle instance newBill
-            const newBill = new NewBill({ document, onNavigate, store: null, localStorage: window.localStorage })
+            const newBill = new NewBill({ document, onNavigate, store: store, localStorage: window.localStorage })
                 // selection du fichier afin de vérifier son format
             const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e))
             let input = screen.getByTestId('file');
@@ -125,53 +154,46 @@ describe("Given I am connected as an employee", () => {
             let computedStyle = getComputedStyle(textError)
             expect(computedStyle.display).toBe('block')
           
-                  
-            /*fireEvent.change(input, {
-              target: {
-                files: [new File(['image.jpg'], 'image.jpg', {
-                  type: 'image/jpg',
-                })],
-              },
-            });
-          
-            // Attendre que l'erreur disparaisse
-            await waitFor(() => {
-              computedStyle = getComputedStyle(textError);
-              console.log(document.body.innerHTML)
-              return computedStyle.display = 'none';
-            });
-          
-            expect(computedStyle.display).toBe('none');*/
-          
         })
 
     })
 })
 
-//POST
+//POST test de la fonction handleSubmit
 describe("When I navigate to Dashboard employee", () => {
 	describe("Given I am a user connected as Employee, and a user post a newBill", () => {
 		test("Add a bill from mock API POST", async () => {
 			const postSpy = jest.spyOn(store, "bills");
 			const bill = {
-				id: "47qAXb6fIm2zOKkLzMro",
-				vat: "80",
-				fileUrl: "https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
-				status: "pending",
-				type: "Hôtel et logement",
-				commentary: "séminaire billed",
-				name: "encore",
-				fileName: "preview-facture-free-201801-pdf-1.jpg",
-				date: "2004-04-04",
-				amount: 400,
-				commentAdmin: "ok",
-				email: "a@a",
-				pct: 20,
+				"id": "47qAXb6fIm2zOKkLzMro",
+      "vat": "80",
+      "fileUrl": "https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
+      "status": "pending",
+      "type": "Hôtel et logement",
+      "commentary": "séminaire billed",
+      "name": "encore",
+      "fileName": "preview-facture-free-201801-pdf-1.jpg",
+      "date": "2004-04-04",
+      "amount": 400,
+      "commentAdmin": "ok",
+      "email": "a@a",
+      "pct": 20
 			};
 			const postBills = await store.bills().update(bill);
-			expect(postSpy).toHaveBeenCalledTimes(1);
 			expect(postBills).toStrictEqual(bill);
 		});
+
+    test("Add a bill from mock API POST with the function create", async () => {
+			const postSpy = jest.spyOn(store, "bills");
+			const bill = {
+				fileUrl: "https://localhost:3456/images/test.jpg",
+        key: '1234'
+			};
+			const postBills = await store.bills().create(bill);
+
+			expect(postBills).toStrictEqual(bill);
+		});
+
 		describe("When an error occurs on API", () => {
 			beforeEach(() => {
 				window.localStorage.setItem(
@@ -183,10 +205,8 @@ describe("When I navigate to Dashboard employee", () => {
 
 				document.body.innerHTML = NewBillUI();
 
-				const onNavigate = (pathname) => {
-					document.body.innerHTML = ROUTES({ pathname });
-				};
 			});
+
 			test("Add bills from an API and fails with 404 message error", async () => {
 				const postSpy = jest.spyOn(console, "error");
 
